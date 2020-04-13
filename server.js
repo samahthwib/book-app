@@ -22,32 +22,39 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 //To test the connection
-app.get('/hello', (req, res) => {
-  res.render('./pages/index');
+// app.get('/hello', (req, res) => {
+//   res.render('./pages/index');
+// });
+
+//routs
+app.get('/', (req, res) => {
+  res.render('pages/index');
 });
 
-//search rout
-app.get('/', (req, res) => {
+app.get('/search', (req, res) => {
   res.render('pages/searches/new');
 });
 
-app.post('/searches', (req, res) => {
+app.get('/index', (req, res) => {
+  res.redirect('/');
+});
 
+app.post('/searches', (req, res) => {
   console.log(req.body.search);//will give the result depends on the user input ex: ['science','title']
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
   //console.log(url);
-
   //the url needs q=search+terms so I want to specify the search term and th q has some keywords, intitle for the title and inauthor for the author
   if (req.body.search[1] === 'title') {
-    url += `intitle:${req.body.search[0]}`;
+    url += `+intitle:${req.body.search[0]}`;
     //console.log(url);
   }
   if (req.body.search[1] === 'author') {
-    url += `inauthor:${req.body.search[0]}`;
+    url += `+inauthor:${req.body.search[0]}`;
     console.log(url);
   }
-  
-  return superagent.get(url)
+
+  console.log(url);
+  superagent.get(url)
     .then(data => {
       //console.log(data);
       let book = data.body.items.map((val) => {
@@ -55,16 +62,16 @@ app.post('/searches', (req, res) => {
       });
       res.render('pages/searches/show', { books: book });
     })
-    .catch((err) => errorHandler(err, res));
+    .catch(errorHandler);
 });
 
 //-------------constructor Function--------------//
 
 function Book(data) {
-  this.image_url = data.volumeInfo.imageLinks.thumbnail;
-  this.title = data.volumeInfo.title;
-  this.author = data.volumeInfo.authors[0];
-  this.description = data.volumeInfo.description ;
+  this.title = data.volumeInfo.title ? data.volumeInfo.title : 'Not Found';
+  this.smallThumbnail = data.volumeInfo.imageLinks.smallThumbnail ? data.volumeInfo.imageLinks.smallThumbnail : 'Not Found';
+  this.authors = data.volumeInfo.authors[0] ? data.volumeInfo.authors[0] : 'Not Found';
+  this.description = data.volumeInfo.description ? data.volumeInfo.description : 'Not Found';
 }
 
 
@@ -81,7 +88,6 @@ app.use('*', (req, res) => {
 
 
 function errorHandler(error, req, res) {
-  res.status(500).send('ERROR');
-
+  res.render('pages/error', { error: 'somthing wrong' });
 }
 

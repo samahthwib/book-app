@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
 
-   
+<header>
+    
+</header>
     <div>
-        <% books.forEach(data { %>
-        <p>Book Tilte</p>
-        <li><%= data.volumeInfo.title %></li>
-        <p>The author</p>
-        <li><%=  data.volumeInfo.authors[0] %></li>
-        <p>The description</p>
-        <li><%= data.volumeInfo.description %></li>
-        <p>The imageLinks</p>
-        <li> <img src="<%= data.volumeInfo.imageLinks.thumbnail %>" alt="image"></li>
-        <% }); %>
+        <% books.forEach(data =>{ %>
+        <img src="<%= data.smallThumbnail %>" alt="image">
+        <h3><%= data.title %></h3>
+        <h4><%=  data.authors %></h4>
+        <p><%= data.description %></p>
+        <% }) %>
 
-     </div>
+    </div>
 
 </body>
-</html>
 
+</html>
