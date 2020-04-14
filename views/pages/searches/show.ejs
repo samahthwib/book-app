@@ -10,18 +10,59 @@
 <body>
 
 <header>
-    
+    <div class="topnav">
+        <ul id="my-links">
+            <li><a href="/index">Home</a></li>
+            <li><a href="/search">Search the google API</a></li>
+        </ul>
 </header>
     <div>
-        <% books.forEach(data =>{ %>
-        <img src="<%= data.image %>" alt="image">
-        <h3><%= data.title %></h3>
-        <h4><%=  data.authors %></h4>
-        <p><%= data.description %></p>
-        <% }) %>
+        <div class="book">
+        <% books.forEach(book =>{ %>
+        <img src="<%= book.image %>" alt="image">
+        <h3><%= book.title %></h3>
+        <h4><%=  book.authors %></h4>
+        <p><%= book.description %></p>
+        <button id='first-id'> Select this Book </button>
 
     </div>
+        <form id="second-id" action="/books" method="POST" style="display: none;" name="hidden">
+          
+            <input name="title" type="text" value="<%= book.title %>">
+            <br>
+            <input name="authors" type="text" value="<%= book.authors %>">
+            <br>
+            <input name="image" type="text" value=" <%= book.image %>">
+            <br>
+            <input name="description" type="text" value="<%= book.description %>">
+            <br>
+            <input type="text" name="shelf" placeholder="Enter a Bookshelf Name" required>
+            <br>
+            <button type="submit">Add Book</button>
 
+            <script>
+                $('#first-id').click(showForm);
+                function showForm(){
+                  $('#second-id').show() ;
+                  $('.book').hide();
+                }
+              </script>
+          </form>
+        <% }) %>
+
+      
+    </div>
+<script>
+      function myFunction() {
+    var x = document.getElementById("my-links");
+    if (x.style.display === "block") {
+      x.style.display = "none";
+    } else {
+      x.style.display = "block";
+    }
+  }
+</script>
+  
 </body>
 
 </html>
