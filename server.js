@@ -1,6 +1,6 @@
+'use strict';
 
-'use-strict';
-
+//-----------------APPLICATION-DEPENDINCIES--------------//
 //application dependencies
 require('dotenv').config();
 const express = require('express');
@@ -21,12 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 //to till the express that I want to use the ejs engine template
 app.set('view engine', 'ejs');
 
-//To test the connection
-// app.get('/hello', (req, res) => {
-//   res.render('./pages/index');
-// });
+// LISTEN ON PORT
+app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
-//routs
+//-------------------------ROUTS-----------------------//
+app.get('/hello', (req, res) => {
+  res.send('HELLO WORLD!');
+});
+
 app.get('/', (req, res) => {
   res.render('pages/index');
 });
@@ -39,55 +41,42 @@ app.get('/index', (req, res) => {
   res.redirect('/');
 });
 
-app.post('/searches', (req, res) => {
-  console.log(req.body.search);//will give the result depends on the user input ex: ['science','title']
-  let url = 'https://www.googleapis.com/books/v1/volumes?q=';
+app.post('/searches', getBookData);
+
+//-------------------------HELPER-FUNCTIONS------------------------//
+
+
+function getBookData(req, res) {
+  const url = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.search[1]}:${req.body.search[0]}`;
   //console.log(url);
-  //the url needs q=search+terms so I want to specify the search term and th q has some keywords, intitle for the title and inauthor for the author
-  if (req.body.search[1] === 'title') {
-    url += `+intitle:${req.body.search[0]}`;
-    //console.log(url);
-  }
-  if (req.body.search[1] === 'author') {
-    url += `+inauthor:${req.body.search[0]}`;
-    console.log(url);
-  }
-
-  console.log(url);
   superagent.get(url)
-    .then(data => {
-      //console.log(data);
-      let book = data.body.items.map((val) => {
-        return new Book(val);
-      });
-      res.render('pages/searches/show', { books: book });
+    .then(results => {
+        let theBook = results.body.items.map((bookData) => {
+          let book = new Book(bookData.volumeInfo);
+          return book;
+        });
+        // console.log(theBook);
+        res.render('pages/searches/show', { books: theBook });
+      
     })
-    .catch(errorHandler);
-});
+    .catch(error => handleError(error, res));
+}
 
-//-------------constructor Function--------------//
+//-------------------------CONSTRUCTOR------------------------//
 
 function Book(data) {
-  this.title = data.volumeInfo.title ? data.volumeInfo.title : 'Not Found';
-  this.smallThumbnail = data.volumeInfo.imageLinks.smallThumbnail ? data.volumeInfo.imageLinks.smallThumbnail : 'Not Found';
-  this.authors = data.volumeInfo.authors[0] ? data.volumeInfo.authors[0] : 'Not Found';
-  this.description = data.volumeInfo.description ? data.volumeInfo.description : 'Not Found';
+  this.title = data.title || '';
+  this.authors = (data.authors) ? data.authors.join(', ') : 'Not a known author';
+  this.description = data.description || 'No description available.';
+  this.isbn = data.industryIdentifiers[0].identifier || 'N/A';
+  this.image = data.imageLinks.thumbnail.replace('http://', 'https://') || 'https://unmpress.com/sites/default/files/default_images/no_image_book.jpg';
 }
 
-
-
-//listen to server
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
-
-//-------------------Errors---------------------//
-app.use('*', (req, res) => {
-  res.status(404).send('NOT FOUND');
-});
-
-
-function errorHandler(error, req, res) {
-  res.render('pages/error', { error: 'somthing wrong' });
+//-------------------------ERROR-HANDLER------------------------//
+function handleError(error, res) {
+  if (res) {
+    res.render('pages/error', {
+      error: 'An error has occurred, please retry.'
+    });
+  }
 }
-
