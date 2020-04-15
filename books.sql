@@ -11,8 +11,8 @@ CREATE TABLE books (
 );
 
 
-INSERT INTO books (authors, title, isbn, image_url, description, bookshelf)
-VALUES ('samah' , 'food' , 'Not Found' , 'Not Found' , 'nothing' , 'nothing');
+-- INSERT INTO books (authors, title, isbn, image_url, description, bookshelf)
+-- VALUES ('samah' , 'food' , 'Not Found' , 'Not Found' , 'nothing' , 'nothing');
 
-INSERT INTO books (authors, title, isbn, image_url, description, bookshelf)
-VALUES ('saja' , 'birds' , 'Not Found' , 'Not Found' , 'nothing' , 'nothing');
+-- INSERT INTO books (authors, title, isbn, image_url, description, bookshelf)
+-- VALUES ('saja' , 'birds' , 'Not Found' , 'Not Found' , 'nothing' , 'nothing');
