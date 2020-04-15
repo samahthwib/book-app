@@ -1,3 +1,4 @@
+
 'use strict';
 
 //-----------------APPLICATION-DEPENDINCIES--------------//
@@ -23,7 +24,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
 //to till the express that I want to use the ejs engine template
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
 
 // LISTEN ON PORT
 client.connect() //this is a promise fn
@@ -38,9 +39,9 @@ app.get('/hello', (req, res) => {
   res.send('HELLO WORLD!');
 });
 
-app.get('/', (req, res) => {
-  res.render('pages/index');
-});
+// app.get('/', (req, res) => {
+//   res.render('pages/index');
+// });
 
 app.get('/search', (req, res) => {
   res.render('pages/searches/new');
@@ -56,6 +57,8 @@ app.post('/searches', getBookData);
 //this route to add book to DB
 app.post('/books' , addBook) ;
 
+//To get data from database
+app.get('/', getBooksFromDatabase);
 //-------------------------HELPER-FUNCTIONS------------------------//
 
 //This one for SEARCHES
@@ -77,13 +80,28 @@ function getBookData(req, res) {
 
 //This one for ADDBOOK
 function addBook(req , res){
-  let {authors, title, isbn, image, description, bookshelf} = req.body ;
-  let SQL = 'INSERT INTO books(authors, title, isbn, image, description, bookshelf) VALUES ($1, $2, $3, $4 ,$5 ,$6);' ;
-  let values = [authors, title, isbn, image, description, bookshelf] ;
+  console.log('hiiiiiiiiii');
+  //  let title = req.body.title;
+  //   console.log(title);
+  let {authors, title, isbn, image_url, description, bookshelf} = req.body ;
+  console.log(authors, title, isbn, image_url, description, bookshelf);
+  let SQL = 'INSERT INTO books(authors, title, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4 ,$5 ,$6);' ;
+  let values = [authors, title, isbn, image_url, description, bookshelf] ;
   return client.query(SQL , values)
-    .then(() => {
-      return res.redirect('/');
+    .then (results =>{
+      res.redirect('/');
     });
+
+}
+
+function getBooksFromDatabase(req, res) {
+  res.render('pages/index');
+  let selectSql = 'SELECT * FROM books;';
+  return client.query(selectSql)
+    .then(result => {
+      res.render('views/pages/index', { bookResult : result.rows });
+    })
+    .catch(error => handleError(error, res));
 }
 
 //-------------------------CONSTRUCTOR------------------------//
@@ -94,7 +112,7 @@ function Book(data) {
   this.authors = (data.authors) ? data.authors.join(', ') : 'Not a known author';
   this.description = data.description || 'No description available.';
   this.isbn = data.industryIdentifiers[0].identifier || 'N/A';
-  this.image = data.imageLinks.thumbnail.replace('http://', 'https://') || 'https://unmpress.com/sites/default/files/default_images/no_image_book.jpg';
+  this.image_url = data.imageLinks.thumbnail.replace('http://', 'https://') || 'https://unmpress.com/sites/default/files/default_images/no_image_book.jpg';
   this.bookshelf = (data.bookshelf && data.bookshelf !== '') ? (data.bookshelf) : ('Not Shelved');
 }
 
