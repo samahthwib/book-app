@@ -2,36 +2,33 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/base.css">
-    <title>Document</title>
+  <%- include('../layout/head') %>
 </head>
 
 <body>
-    <header>
-
-        
-        <!-- <div class="container" onclick="myFunction(this)">
-            <div class="bar1"></div>
-            <div class="bar2"></div>
-            <div class="bar3"></div>
-          </div> -->
-          <h2>Best Books!</h2> 
-        <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/search">Search the google API</a></li>
-        </ul>
-
-    </header>
-
-    <main>
-        <!-- <h1>Hello World</h1> -->
-    </main>
-
-    <footer></footer>
+  <header>
+    <%- include('../layout/header') %>
+  </header>
 
 
+  <main>
+    <ul>
+      <% bookResult.forEach(book => { %>
+      <li>
+        <img src="<%= book.image_url %>" alt="image">
+        <h3>Book title: <%= book.title %></h3>
+        <h4>Book author: <%= book.authors %></h4>
+        <p>Book isbn: <%= book.isbn %></p>
+        <p>Book description<%= book.description %></p>
+        <a href="/books/<%= book.id%>">View details</a>
+      </li>
+      <% }) %>
+    </ul>
+
+  </main>
+
+  <footer> <%- include('../layout/footer') %></footer>
+  
 </body>
 
 </html>
