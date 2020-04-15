@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../layout/head') %>
+</head>
+
+<body>
+    <header>
+        <%- include('../layout/header') %>
+    </header>
+
+
+    <main>
+        <ul>
+            <li>
+                <img src="<%= book.image_url %>" alt="Image for <%= book.title %>">
+                <h3 class="bookTitle"><%= book.title %></h3>
+                <h5 class="bookAuthor"><%= book.author %></h5>
+            </li>
+        </ul>
+
+        <form action="/delete/<%=book.id%>?_method=delete" method="post">
+            <button type="submit">Delete</button>
+        </form>
+
+        <button id='update_btn'>Update</button>
+        <section id='update_form'>
+            <h2>Update Book</h2>
+            <form action="/update/<%=book.id%>?_method=put" method="post">
+                <input name="title" type="text" value="<%= book.title %>">
+                <br>
+                <input name="authors" type="text" value="<%= book.authors %>">
+                <br>
+                <input name="image_url" type="text" value=" <%= book.image_url %>">
+                <br>
+                <input type="text" name="shelf" placeholder="Enter a Bookshelf Name" required>
+                <br>
+                <textarea name="description" cols="30" rows="10"><%= task.description %></textarea>
+                
+                <button type='submit'> Update Task</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer> <%- include('../layout/footer') %></footer>
+
+</body>
+
+</html>

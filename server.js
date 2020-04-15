@@ -35,18 +35,20 @@ client.connect() //this is a promise fn
   });
 
 //-------------------------ROUTS-----------------------//
+//For testing
 app.get('/hello', (req, res) => {
   res.send('HELLO WORLD!');
 });
 
-// app.get('/', (req, res) => {
-//   res.render('pages/index');
-// });
+app.get('/', (req, res) => {
+  res.render('pages/index');
+});
 
 app.get('/search', (req, res) => {
   res.render('pages/searches/new');
 });
 
+//return the user to the home page
 app.get('/index', (req, res) => {
   res.redirect('/');
 });
@@ -55,10 +57,19 @@ app.get('/index', (req, res) => {
 app.post('/searches', getBookData);
 
 //this route to add book to DB
-app.post('/books' , addBook) ;
+app.post('/books', addBook);
 
 //To get data from database
 app.get('/', getBooksFromDatabase);
+
+//To show me the details
+app.get('/books/book_id', getBookDetails);
+
+// //To delete any book
+// app.delete('/delete/:book_id', deleteBook);
+
+// //To update any detail
+// app.put('/update/:book_id', updateBook);
 //-------------------------HELPER-FUNCTIONS------------------------//
 
 //This one for SEARCHES
@@ -71,7 +82,7 @@ function getBookData(req, res) {
         let book = new Book(bookData.volumeInfo);
         return book;
       });
-        // console.log(theBook);
+      // console.log(theBook);
       res.render('pages/searches/show', { books: theBook });
 
     })
@@ -79,35 +90,62 @@ function getBookData(req, res) {
 }
 
 //This one for ADDBOOK
-function addBook(req , res){
+function addBook(req, res) {
   console.log('hiiiiiiiiii');
   //  let title = req.body.title;
   //   console.log(title);
-  let {authors, title, isbn, image_url, description, bookshelf} = req.body ;
-  console.log(authors, title, isbn, image_url, description, bookshelf);
-  let SQL = 'INSERT INTO books(authors, title, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4 ,$5 ,$6);' ;
-  let values = [authors, title, isbn, image_url, description, bookshelf] ;
-  return client.query(SQL , values)
-    .then (results =>{
+  let { authors, title, isbn, image_url, description, bookshelf } = req.body;
+  //console.log(authors, title, isbn, image_url, description, bookshelf);
+  let SQL = 'INSERT INTO books(authors, title, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4 ,$5 ,$6);';
+  let values = [authors, title, isbn, image_url, description, bookshelf];
+  return client.query(SQL, values)
+    .then(results => {
       res.redirect('/');
     });
 
 }
 
 function getBooksFromDatabase(req, res) {
-  res.render('pages/index');
   let selectSql = 'SELECT * FROM books;';
   return client.query(selectSql)
     .then(result => {
-      res.render('views/pages/index', { bookResult : result.rows });
+      res.render('views/pages/index', { bookResult: result.rows });
     })
     .catch(error => handleError(error, res));
 }
 
+function getBookDetails(req, res) {
+  let sql = 'SELECT * FROM tasks where id=$1 ;';
+  let safeValues = [req.params.task_id];
+  return client.query(sql, safeValues)
+    .then(result => {
+      res.render('details', { bookDetails: result.row[0] });
+    });
+}
+
+// function deleteBook(req, res) {
+//   let SQL = 'DELETE FROM books WHERE id=$1';
+//   let value = [req.params.book_id];
+//   client.query(SQL, value)
+//     .then(res.redirect('/'));
+// }
+
+// function updateBook(req, res) {
+//   // collect the info from the form
+//   // update the DB
+//   // resdirect to the same page with the new values
+//   let { authors, title, isbn, image_url, description, bookshelf } = req.body;
+//   let SQL = 'UPDATE books SET authors=$1,title=$2,isbn=$3,image_url=$4,description=$5,bookshelf=$6 WHERE id=$7;';
+//   let values = [authors, title, isbn, image_url, description, bookshelf, req.params.book_id];
+//   client.query(SQL, values)
+//     .then(res.redirect(`/books/${req.params.book_id}`));
+
+// }
+
 //-------------------------CONSTRUCTOR------------------------//
 
 function Book(data) {
-  this.id = data.id ;
+  this.id = data.id;
   this.title = data.title || '';
   this.authors = (data.authors) ? data.authors.join(', ') : 'Not a known author';
   this.description = data.description || 'No description available.';
