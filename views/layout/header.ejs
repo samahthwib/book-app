@@ -1,13 +1,21 @@
-<div id="app-title">
-    <h1>Best Books!</h1>
-    <div id="menu-icon">
-      <i class="fas fa-bars fa-3x"></i>
-    </div>
-  </div>
-  <div id="menu">
-    <h2>Best Books!</h2> 
-        <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/search">Search the google API</a></li>
-        </ul>
+
+    <div class="topnav" id="myTopnav">
+            <a>Best Books!</a>
+            <a href="/index">Home</a>
+            <a href="/search">Search the google API</a>    
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+
+      <script>
+        function myFunction() {
+          var x = document.getElementById("myTopnav");
+          if (x.className === "topnav") {
+            x.className += " responsive";
+          } else {
+            x.className = "topnav";
+          }
+        }
+        </script>
   </div>

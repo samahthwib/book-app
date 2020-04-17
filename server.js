@@ -7,6 +7,7 @@ require('dotenv').config();
 const express = require('express');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 
 //get the DB_URL
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -22,6 +23,7 @@ app.use(express.static('./public'));
 //to get all the data form and send it inside req.body
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 //to till the express that I want to use the ejs engine template
 // app.set('view engine', 'ejs');
@@ -40,9 +42,12 @@ app.get('/hello', (req, res) => {
   res.send('HELLO WORLD!');
 });
 
-app.get('/', (req, res) => {
-  res.render('pages/index');
-});
+//To get data from database
+app.get('/', getBooksFromDatabase);
+
+// app.get('/', (req, res) => {
+//   res.render('pages/index');
+// });
 
 app.get('/search', (req, res) => {
   res.render('pages/searches/new');
@@ -59,17 +64,16 @@ app.post('/searches', getBookData);
 //this route to add book to DB
 app.post('/books', addBook);
 
-//To get data from database
-app.get('/', getBooksFromDatabase);
+
 
 //To show me the details
-app.get('/books/book_id', getBookDetails);
+app.get('/books/:book_id', getBookDetails);
 
 // //To delete any book
-// app.delete('/delete/:book_id', deleteBook);
+app.delete('/delete/:book_id', deleteBook);
 
-// //To update any detail
-// app.put('/update/:book_id', updateBook);
+//To update any detail
+app.put('/update/:book_id', updateBook);
 //-------------------------HELPER-FUNCTIONS------------------------//
 
 //This one for SEARCHES
@@ -109,38 +113,41 @@ function getBooksFromDatabase(req, res) {
   let selectSql = 'SELECT * FROM books;';
   return client.query(selectSql)
     .then(result => {
-      res.render('views/pages/index', { bookResult: result.rows });
+      res.render('pages/index', { bookResult: result.rows });
     })
     .catch(error => handleError(error, res));
 }
 
 function getBookDetails(req, res) {
-  let sql = 'SELECT * FROM tasks where id=$1 ;';
-  let safeValues = [req.params.task_id];
+  console.log('------------------');
+  let sql = 'SELECT * FROM books where id=$1 ;';
+  let safeValues = [req.params.book_id];
+  //console.log(req.params.book_id);
   return client.query(sql, safeValues)
     .then(result => {
-      res.render('details', { bookDetails: result.row[0] });
+      // console.log(result.rows);
+      res.render('pages/books/details', { book: result.rows[0] });
     });
 }
 
-// function deleteBook(req, res) {
-//   let SQL = 'DELETE FROM books WHERE id=$1';
-//   let value = [req.params.book_id];
-//   client.query(SQL, value)
-//     .then(res.redirect('/'));
-// }
+function deleteBook(req, res) {
+  let SQL = 'DELETE FROM books WHERE id=$1';
+  let value = [req.params.book_id];
+  client.query(SQL, value)
+    .then(res.redirect('/'));
+}
 
-// function updateBook(req, res) {
-//   // collect the info from the form
-//   // update the DB
-//   // resdirect to the same page with the new values
-//   let { authors, title, isbn, image_url, description, bookshelf } = req.body;
-//   let SQL = 'UPDATE books SET authors=$1,title=$2,isbn=$3,image_url=$4,description=$5,bookshelf=$6 WHERE id=$7;';
-//   let values = [authors, title, isbn, image_url, description, bookshelf, req.params.book_id];
-//   client.query(SQL, values)
-//     .then(res.redirect(`/books/${req.params.book_id}`));
+function updateBook(req, res) {
+  // collect the info from the form
+  // update the DB
+  // resdirect to the same page with the new values
+  let { authors, title, isbn, image_url, description, bookshelf } = req.body;
+  let SQL = 'UPDATE books SET authors=$1,title=$2,isbn=$3,image_url=$4,description=$5,bookshelf=$6 WHERE id=$7;';
+  let values = [authors, title, isbn, image_url, description, bookshelf, req.params.book_id];
+  client.query(SQL, values)
+    .then(res.redirect(`/books/${req.params.book_id}`));
 
-// }
+}
 
 //-------------------------CONSTRUCTOR------------------------//
 

@@ -3,19 +3,18 @@
 
 
 $(document).ready(function () {
-  $('#select-book').hide();
-  $('#first-id').on('click', function () {
-    $('#select-book').toggle();
-  });
+  // $('.select-book').hide();
+  // $('#first-id').click(showForm);
+  // function showForm(){
+  //   $('#a').toggle();
+  // }
+
+
+  // $('.select-book').hide();
+  // $('#first-class').on('click', function () {
+  //   $('.select-book').toggle();
+  // });
 });
-
-
-// $('#first-id').click(showForm);
-// function showForm(){
-//   $('#second-id').show() ;
-//   $('.book').hide();
-// }
-
 
 // function myFunction() {
 //     var x = document.getElementById("my-links");

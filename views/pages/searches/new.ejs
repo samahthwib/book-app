@@ -1,36 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../../layout/head') %>
-  </head>
 
-  <body>
-    <header>
-      <%- include('../../layout/header') %>
-    </header>
+<head>
+  <%- include('../../layout/head') %>
+</head>
 
-    <main>
-        <h3> Search by Title or Author</h3>
-        <form action="/searches" method="POST">
-            <input type="text" placeholder="Enter a title or author" name="search">
+<body>
+  <header>
+    <%- include('../../layout/header') %>
+  </header>
 
-            <label class="radio-one">
-                <span>Title</span>
-                <input type="radio" name="search" value="title" />
-            </label>
+  <main>
 
-            <label class="radio-two">
-                <span>Author</span>
-                <input type="radio" name="search" value="authors" />
-            </label>
+    <p id="saved-books">Search by Title or Author</p>
+    <form action="/searches" method="POST">
+      <input type="text" placeholder="Enter a title or author" name="search">
 
-            <input type="submit" value="Search the Google Books API">
-        </form>
+      <div class="first-radio">
+        <label class="radio-one">
+          <p class="title">Title</p>
+          <input type="radio" name="search" value="title" />
+        </label>
+      </div>
+      <div class="second-radio">
+        <label class="radio-two">
+          <p class="parg">Author</p>
+          <input type="radio" name="search" value="authors" />
+        </label>
+      </div>
+      <input type="submit" class="search-one" value="Search the Google Books API">
+    </form>
 
-    </main>
+  </main>
 
-    <footer>  <%- include('../../layout/footer') %> </footer>
+  <footer> <%- include('../../layout/footer') %> </footer>
 
 
 </body>
