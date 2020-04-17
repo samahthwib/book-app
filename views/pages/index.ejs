@@ -8,27 +8,39 @@
 <body>
   <header>
     <%- include('../layout/header') %>
+    
   </header>
 
 
   <main>
+    <p id="saved-books">Saved Books <%= bookResult.length %> </p>
+    <div class="show-one">
     <ul>
       <% bookResult.forEach(book => { %>
       <li>
-        <img src="<%= book.image_url %>" alt="image">
-        <h3>Book title: <%= book.title %></h3>
-        <h4>Book author: <%= book.authors %></h4>
-        <p>Book isbn: <%= book.isbn %></p>
-        <p>Book description<%= book.description %></p>
-        <a href="/books/<%= book.id%>">View details</a>
+        <img src="<%= book.image_url %>" class='books-images' alt="image">
+        <h3><%= book.title %></h3>
+        <h4> <%= book.authors %></h4>
+        <p> <%= book.isbn %></p>
+        <p><%= book.description %></p>
+        <a href="/books/<%= book.id%>" id="details">View details</a>
       </li>
+   
+    
       <% }) %>
+
     </ul>
+    
+    <!-- <div class="show-a"></div>
+      <div class="show-b"></div>
+        <div class="show-one"></div>
+          <div class="show-one"></div>
+   -->
 
   </main>
 
-  <footer> <%- include('../layout/footer') %></footer>
-  
+  <!-- <footer>  <%- include('../layout/footer') %> </footer> -->
+  <%- include('../layout/js-links') %>
 </body>
 
 </html>

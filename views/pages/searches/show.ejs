@@ -1,52 +1,59 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <%- include('../../layout/head') %>
+  <%- include('../../layout/head') %>
 </head>
 
 <body>
 
-    <header>
-        <%- include('../../layout/header') %>
-      </header>
-    <div>
-        <div class="book">
-        <% books.forEach(book =>{ %>
-        <img src="<%= book.image_url %>" alt="image">
-        <h3><%= book.title %></h3>
+  <header>
+    <%- include('../../layout/header') %>
+  </header>
+  <div class="show-three">
+
+    <% books.forEach(book =>{ %>
+    <div class="cc">
+      <div class="d"><img src="<%= book.image_url %>" alt="image" class="show-page"></div>
+      <div class="b">
+        <h3 class="aa"><%= book.title %></h3>
+      </div>
+      <div class="b">
         <h4><%=  book.authors %></h4>
-        <p><%=  book.isbn %></p>
-        <p><%= book.description %></p>
-        <button id='first-id'> Select this Book </button>
+      </div>
+      <div class="f">
+        <p class="isbn"><%=  book.isbn %></p>
+      </div>
+      <div class="q">
+        <p class=" desc"><%= book.description %></p>
+      </div>
+      <!-- <div class="bb"><button id='first-id'  class="but4"> Select this Book </button></div> 
+     -->
 
-       
-       
-        <section id="select-book">
-            <form id="<%=book.id%>" action="/books" method="POST" >
-              
-                <input name="title" type="text" value="<%= book.title %>">
-                <br>
-                <input name="authors" type="text" value="<%= book.authors %>">
-                <br>
-                <input name="image_url" type="text" value=" <%= book.image_url %>">
-                <br>
-                <textarea name="description" type="text" value="<%= book.description %>"></textarea>
-                <br>
-                <input type="text" name="shelf" placeholder="Enter a Bookshelf Name" required>
-                <br>
-                <button type="submit">Add Book</button>
-              </form>
-            </section>
-         
-        <% }) %>
-       
-      
-      
-<footer>  <%- include('../../layout/footer') %></footer>   
+      <section class="select-book" id="a">
+        <form id="<%=book.id%>" action="/books" method="POST">
+          <div class="one"> <input name="title" type="text" value="<%= book.title %>"></div>
+          <br>
+          <div class="one"> <input name="authors" type="text" value="<%= book.authors %>"></div>
+          <br>
+          <div class="one"> <input name="image_url" type="text" value=" <%= book.image_url %>"></div>
+          <br>
+          <div class="one"> <input name="description" type="text" value=" <%= book.description %>"></div>
+          <br>
+          <div class="one"></div><input type="text" name="shelf" placeholder="Enter a Bookshelf Name" required>
+    </div>
+    <br>
+    <div class="fff"><button type="submit" class="but3">Add Book</button></div>
 
- 
-    <%- include('../../layout/js-links') %>
+    </form>
+
+    </section>
+  </div>
+  </div>
+  <% }) %>
+
+  <footer> <%- include('../../layout/footer') %></footer>
+  <%- include('../../layout/js-links') %>
 </body>
 
-</html> 
+</html>

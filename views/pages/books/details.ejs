@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../layout/head') %>
+</head>
+
+<body>
+    <header>
+        <%- include('../../layout/header') %>
+    </header>
+
+
+    <main>
+        <div class=" show-two">
+        <ul>
+            <li>
+                <img src="<%= book.image_url %>" class="book-images-two" alt="Image for <%= book.title %>">
+                <h3 class="bookTitle"><%= book.title %></h3>
+                <h5 class="bookAuthor"><%= book.author %></h5>
+            </li>
+        </ul>
+   
+      
+        <section id='update_form'>
+            <form action="/update/<%=book.id%>?_method=put" method="post">
+                <input name="title" type="text" class='aa' value="<%= book.title %>">
+                <br>
+                <input name="authors" type="text" class="b" value="<%= book.authors %>">
+                <br>
+                <input name="image_url" type="text" class="c" value=" <%= book.image_url %>">
+                <br>
+                <!-- <input type="text" name="shelf" placeholder="Enter a Bookshelf Name" required> -->
+                <br>
+                <!-- <textarea name="description" class="d" cols="30" rows="10"><%= book.description %></textarea>
+                 -->
+                <button type='submit' class="but2" > Update Book</button>
+            </form>
+            <form action="/delete/<%=book.id%>?_method=delete" method="post">
+                <button type="submit" class="but1">Delete</button>
+            </form>
+    
+            
+        </section>
+    </div>
+
+    </main>
+
+    <footer class="foot"> <%- include('../../layout/footer') %></footer>
+
+</body>
+
+</html>
